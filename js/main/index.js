@@ -19,15 +19,33 @@ function addEmployee() {
     // Create a new object 
     var employee = new Employee(_account, _name, _email, _password, _date, _salary, _title, _hour); 
 
-    // Push this object to the employeeList 
-    employeeList.push(employee);
-    console.log("employeeList", employeeList); 
+    // todo: Check validation for employee before pushing
+    var isValid = true; 
+    // Check if input is empty
+    isValid = checkEmpty(employee.account, "tbTKNV") 
+                & checkEmpty(employee.name, "tbTen") 
+                & checkEmpty(employee.email, "tbEmail")
+                & checkEmpty(employee.password, "tbMatKhau")  
+                & checkEmpty(employee.date, "tbNgay")
+                & checkEmpty(employee.salary, "tbLuongCB")
+                & checkEmpty(employee.title, "tbChucVu")
+                & checkEmpty(employee.hour, "tbGiolam"); 
+    // Check account input is all number and has length of 4-6 digits 
+    isValid &= checkAccountInput(employee.account, "tbTKNV", 4, 6); 
+    // Check if input is all letters
+    isValid &= checkAllLetter(employee.name, "tbTen"); 
 
-    // Save to localStorage
-    saveLocalStorage();
+    if (isValid) {
+        // Push this object to the employeeList 
+        employeeList.push(employee);
+        console.log("employeeList", employeeList); 
 
-    // Render employeeList on UI
-    renderEmployeeList(employeeList); 
+        // Save to localStorage
+        saveLocalStorage();
+
+        // Render employeeList on UI
+        renderEmployeeList(employeeList);
+    }  
 }
 
 // TODO: Delete employee
