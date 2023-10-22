@@ -43,6 +43,8 @@ function addEmployee() {
         employeeList.push(employee);
         // console.log("employeeList", employeeList);
 
+        document.getElementById("form-login").reset();
+
         // Save to localStorage
         saveLocalStorage();
 
@@ -107,25 +109,42 @@ function updateEmployee() {
     var position = employeeList.findIndex((item) => {
         return item.account == updatedEmp.account;
     });
-    console.log("position", position)
 
-    if (position != -1) {
+    if (position != -1) { // found 
         // Update employee's info in employeeList
         employeeList[position] = updatedEmp;
-        console.log("employeeList[position]", employeeList[position])
-        
-        // Create employeeList[position] as a new object of Employee()
-        employeeList[position] = new Employee(updatedEmp.account, updatedEmp.name, updatedEmp.email, updatedEmp.password, updatedEmp.date, updatedEmp.salary, updatedEmp.title, updatedEmp.hour);
-        console.log("employeeList[position]", employeeList[position])
+        // console.log("employeeList[position] before validation", employeeList[position]);
 
-        // Clear the form after updating
-        document.getElementById("form-login").reset();
+        // todo: Validation for each input fields before pushing 
+        var isValid = true;
+        // name field
+        isValid &= checkEmpty(employeeList[position].name, "tbTen") && checkAllLetter(employeeList[position].name, "tbTen");
+        // email field 
+        isValid &= checkEmpty(employeeList[position].email, "tbEmail") && checkEmail(employeeList[position].email, "tbEmail");
+        // password field
+        isValid &= checkEmpty(employeeList[position].password, "tbMatKhau") && checkPassword(employeeList[position].password, "tbMatKhau");
+        // date field
+        isValid &= checkEmpty(employeeList[position].date, "tbNgay");
+        // salary field
+        isValid &= checkEmpty(employeeList[position].salary, "tbLuongCB") && checkRange(employeeList[position].salary, "tbLuongCB", "Salary", 1000000, 20000000);
+        // position field
+        isValid &= checkPosition(employeeList[position].title, "tbChucVu");
+        // hour field
+        isValid &= checkEmpty(employeeList[position].hour, "tbGiolam") && checkRange(employeeList[position].hour, "tbGiolam", "Hours", 80, 200);
 
-        // Re-render employeeList
-        renderEmployeeList(employeeList);
+        if (isValid) {
+            // Create employeeList[position] as a new object of Employee()
+            employeeList[position] = new Employee(updatedEmp.account, updatedEmp.name, updatedEmp.email, updatedEmp.password, updatedEmp.date, updatedEmp.salary, updatedEmp.title, updatedEmp.hour);
 
-        // Save to localStorage
-        saveLocalStorage();
+            // Clear the form after updating
+            document.getElementById("form-login").reset();
+
+            // Re-render employeeList
+            renderEmployeeList(employeeList);
+
+            // Save to localStorage
+            saveLocalStorage();
+        }
     }
 }
 
