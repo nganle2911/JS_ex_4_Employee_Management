@@ -17,35 +17,38 @@ function addEmployee() {
     var _hour = document.getElementById("gioLam").value;
 
     // Create a new object 
-    var employee = new Employee(_account, _name, _email, _password, _date, _salary, _title, _hour); 
+    var employee = new Employee(_account, _name, _email, _password, _date, _salary, _title, _hour);
 
-    // todo: Check validation for employee before pushing
-    var isValid = true; 
-    // Check if input is empty
-    isValid = checkEmpty(employee.account, "tbTKNV") 
-                & checkEmpty(employee.name, "tbTen") 
-                & checkEmpty(employee.email, "tbEmail")
-                & checkEmpty(employee.password, "tbMatKhau")  
-                & checkEmpty(employee.date, "tbNgay")
-                & checkEmpty(employee.salary, "tbLuongCB")
-                & checkEmpty(employee.title, "tbChucVu")
-                & checkEmpty(employee.hour, "tbGiolam"); 
-    // Check account input is all number and has length of 4-6 digits 
-    isValid &= checkAccountInput(employee.account, "tbTKNV", 4, 6); 
-    // Check if input is all letters
-    isValid &= checkAllLetter(employee.name, "tbTen"); 
-
+    // todo: Validation for each input fields before pushing 
+    var isValid; 
+    // account field
+    isValid = checkEmpty(employee.account, "tbTKNV") && checkNumber(employee.account, "tbTKNV") && checkLength(employee.account, "tbTKNV", 4, 6) && checkAccount(employee.account, employeeList); 
+    // name field
+    isValid &= checkEmpty(employee.name, "tbTen") && checkAllLetter(employee.name, "tbTen");
+    // email field 
+    isValid &= checkEmpty(employee.email, "tbEmail") && checkEmail(employee.email, "tbEmail");
+    // password field
+    isValid &= checkEmpty(employee.password, "tbMatKhau") && checkPassword(employee.password, "tbMatKhau"); 
+    // date field
+    isValid &= checkEmpty(employee.date, "tbNgay"); 
+    // salary field
+    isValid &= checkEmpty(employee.salary, "tbLuongCB") && checkRange(employee.salary, "tbLuongCB", "Salary", 1000000, 20000000); 
+    // position field
+    isValid &= checkPosition(employee.title, "tbChucVu"); 
+    // hour field
+    isValid &= checkEmpty(employee.hour, "tbGiolam") && checkRange(employee.hour, "tbGiolam", "Hours", 80, 200); 
+    
     if (isValid) {
         // Push this object to the employeeList 
         employeeList.push(employee);
-        console.log("employeeList", employeeList); 
+        // console.log("employeeList", employeeList);
 
         // Save to localStorage
         saveLocalStorage();
 
         // Render employeeList on UI
         renderEmployeeList(employeeList);
-    }  
+    }
 }
 
 // TODO: Delete employee
@@ -98,28 +101,31 @@ function updateEmployee() {
         salary: document.getElementById("luongCB").value * 1,
         title: document.getElementById("chucvu").value,
         hour: document.getElementById("gioLam").value
-    }; 
+    };
 
     // Find the position of updatedEmp in employeeList
     var position = employeeList.findIndex((item) => {
-        return item.account == updatedEmp.account; 
-    }); 
+        return item.account == updatedEmp.account;
+    });
+    console.log("position", position)
 
     if (position != -1) {
         // Update employee's info in employeeList
-        employeeList[position] = updatedEmp; 
-
+        employeeList[position] = updatedEmp;
+        console.log("employeeList[position]", employeeList[position])
+        
         // Create employeeList[position] as a new object of Employee()
-        employeeList[position] = new Employee(updatedEmp.account, updatedEmp.name, updatedEmp.email, updatedEmp.password, updatedEmp.date, updatedEmp.salary, updatedEmp.title, updatedEmp.hour); 
+        employeeList[position] = new Employee(updatedEmp.account, updatedEmp.name, updatedEmp.email, updatedEmp.password, updatedEmp.date, updatedEmp.salary, updatedEmp.title, updatedEmp.hour);
+        console.log("employeeList[position]", employeeList[position])
 
         // Clear the form after updating
         document.getElementById("form-login").reset();
 
         // Re-render employeeList
-        renderEmployeeList(employeeList); 
+        renderEmployeeList(employeeList);
 
         // Save to localStorage
-        saveLocalStorage(); 
+        saveLocalStorage();
     }
 }
 
