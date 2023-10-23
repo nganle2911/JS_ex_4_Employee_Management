@@ -138,6 +138,7 @@ function updateEmployee() {
 
             // Clear the form after updating
             document.getElementById("form-login").reset();
+            document.getElementById("tknv").disabled = false;
 
             // Re-render employeeList
             renderEmployeeList(employeeList);
@@ -146,6 +147,12 @@ function updateEmployee() {
             saveLocalStorage();
         }
     }
+}
+
+// When pressing on button "Close" => form will be reset 
+function resetForm() {
+    document.getElementById("tknv").disabled = false;
+    document.getElementById("form-login").reset();
 }
 
 // TODO: Save data in localStorage
